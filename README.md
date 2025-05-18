@@ -135,3 +135,76 @@ services:
         max-size: "10m"
         max-file: "3"
 ```
+
+### 🟢 Step 5: 启动节点
+
+```bash
+docker compose up -d
+```
+
+查看日志：
+
+```bash
+docker compose logs -fn 100
+```
+
+---
+
+### 🔍 Step 6: 查看同步状态
+
+### ✅ 检查 Geth 执行层是否同步：
+
+```bash
+curl -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","method":"eth_syncing","params":[],"id":1}' http://localhost:8545
+```
+
+### ✅ 检查 Prysm 共识层是否同步：
+
+```bash
+curl http://localhost:3500/eth/v1/node/syncing
+```
+
+---
+
+### 🔐 Step 7: 配置防火墙（UFW）
+
+```bash
+sudo ufw allow 22
+sudo ufw allow ssh
+sudo ufw allow 30303/tcp
+sudo ufw allow 30303/udp
+sudo ufw allow from 127.0.0.1 to any port 8545 proto tcp
+sudo ufw allow from 127.0.0.1 to any port 3500 proto tcp
+sudo ufw enable
+sudo ufw reload
+```
+
+> 如需远程访问 RPC，请执行：
+> 
+
+```bash
+sudo ufw allow from <your-client-ip> to any port 8545 proto tcp
+sudo ufw allow from <your-client-ip> to any port 3500 proto tcp
+```
+
+---
+
+### 📡 Step 8: 获取 RPC 访问地址
+
+- **执行层 (Geth)**
+    - 内部访问：`http://localhost:8545`
+    - 外部访问：`http://<your-vps-ip>:8545`
+- **共识层 (Prysm)**
+    - 内部访问：`http://localhost:3500`
+    - 外部访问：`http://<your-vps-ip>:3500`
+
+---
+
+### 📊 Step: 资源监控（可选）
+
+```bash
+htop                # 查看 CPU、内存
+df -h               # 查看磁盘空间
+docker exec -it geth du -sh /data
+docker exec -it prysm du -sh /data
+```
