@@ -200,7 +200,7 @@ sudo ufw allow from <your-client-ip> to any port 3500 proto tcp
 
 ---
 
-### 📊 Step: 资源监控（可选）
+### 📊 Step 9: 资源监控（可选）
 
 ```bash
 htop                # 查看 CPU、内存
